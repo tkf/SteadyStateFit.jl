@@ -1,0 +1,13 @@
+name = "SteadyStateFit"
+uuid = "ba0d49fa-da6a-49e1-9b97-8e3acd38c522"
+authors = ["Takafumi Arakaki <aka.tkf@gmail.com>"]
+version = "0.1.0"
+
+[compat]
+julia = "1.1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
