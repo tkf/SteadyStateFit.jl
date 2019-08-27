@@ -1,4 +1,4 @@
-# SteadyStateFit
+# SteadyStateFit: Fit parameters of ODE with respect to a loss function defined on steady states
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://tkf.github.io/SteadyStateFit.jl/stable)
 [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://tkf.github.io/SteadyStateFit.jl/dev)
