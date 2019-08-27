@@ -1,3 +1,10 @@
+"""
+    optimize(sso::SteadyStateObjective, [x0, method, options])
+
+Optimize a [`SteadyStateObjective`](@ref) `sso` using Optim.  The rest
+of the positional and keyword arguments are passed to
+`Optim.optimize`.
+"""
 function optimize(
     sso::SteadyStateObjective,
     x0 = get(sso.p, sso.parameterlens),

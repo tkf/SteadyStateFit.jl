@@ -9,7 +9,6 @@ makedocs(;
     repo="https://github.com/tkf/SteadyStateFit.jl/blob/{commit}{path}#L{line}",
     sitename="SteadyStateFit.jl",
     authors="Takafumi Arakaki <aka.tkf@gmail.com>",
-    assets=String[],
 )
 
 deploydocs(;

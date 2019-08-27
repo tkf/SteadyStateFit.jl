@@ -3,6 +3,7 @@
 ```@index
 ```
 
-```@autodocs
-Modules = [SteadyStateFit]
+```@docs
+SteadyStateFit.SteadyStateObjective
+SteadyStateFit.optimize
 ```

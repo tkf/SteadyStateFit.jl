@@ -27,9 +27,22 @@ end
         parameterlens::Lens,
     )
 
-Solve steady states of `ode` for `N = length(conditions)` and compute
-the objective using the `loss` function defined on a state-condition
-pair.
+`SteadyStateObjective` defines an objective function `F`
+
+```math
+F(x) =
+\\frac{1}{N}
+\\sum_{c \\in \\mathtt{conditions}} \\mathtt{loss}(u(x, c), c)
+```
+
+where `N = length(conditions)` and ``u(x, c)`` is the steady state
+solution of the `ode` given a trainable parameter ``x`` and a
+condition ``c``.  The trainable parameter ``x`` and the "external"
+condition ``c`` are set using `parameterlens` and `conditionsetter`
+lenses which act on `ode.p` respectively.
+
+`SteadyStateObjective` also provides Jacobian in the `fg!(F, G, x)`
+form required by `Optim.only_fg!`.
 """
 SteadyStateObjective(
     loss,
