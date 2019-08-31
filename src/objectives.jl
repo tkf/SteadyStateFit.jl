@@ -93,7 +93,7 @@ function (sso::SteadyStateObjective)(F, G, x)
         return sso(x)
     end
     f, back = forward(sso, x)
-    G .= first.(back(1))
+    G .= first(back(1))
     if F !== nothing
         return f
     end
