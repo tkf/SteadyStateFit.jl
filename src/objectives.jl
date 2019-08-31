@@ -7,6 +7,7 @@ struct SteadyStateObjective{
     TC,
     TCL <: Lens,
     TPL <: Lens,
+    TSSS,
 }
     loss::TL   # loss(u, condition)
     f::TF      # f(u, p, t)
@@ -16,7 +17,14 @@ struct SteadyStateObjective{
     conditions::TC
     conditionsetter::TCL
     parameterlens::TPL
+    steadystatesolver::TSSS
 end
+
+struct NLSolver{T}
+    options::T
+end
+
+NLSolver(; kwargs...) = NLSolver(kwargs.data :: NamedTuple)
 
 """
     SteadyStateObjective(
@@ -25,6 +33,7 @@ end
         conditions,
         conditionsetter::Lens,
         parameterlens::Lens,
+        steadystatesolver = NLSolver(),
     )
 
 `SteadyStateObjective` defines an objective function `F`
@@ -50,11 +59,13 @@ SteadyStateObjective(
     conditions,
     conditionsetter,
     parameterlens,
+    steadystatesolver = NLSolver(),
 ) =
     SteadyStateObjective(
         loss, ode.f.f, ode.f.jac, ode.p,
         deepcopy(fill(ode.u0, size(conditions))),
         conditions, conditionsetter, parameterlens,
+        steadystatesolver,
     )
 
 setparameter(sso::SteadyStateObjective, x) =
@@ -77,7 +88,9 @@ steadystates(sso::SteadyStateObjective) =
 
 _steadystate(sso::SteadyStateObjective, u0, condition) =
     let p = set(sso.p, sso.conditionsetter, condition)
-        znlsolve(u -> sso.f(u, p, 0), u -> sso.j(u, p, 0), u0).zero
+        # TODO: dispatch on `steadystatesolver` type at `znlsolve`
+        options = sso.steadystatesolver.options
+        znlsolve(u -> sso.f(u, p, 0), u -> sso.j(u, p, 0), u0; options...).zero
     end
 
 # f(x)
