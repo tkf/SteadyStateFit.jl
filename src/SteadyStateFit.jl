@@ -1,10 +1,11 @@
 module SteadyStateFit
 
-export Optim, SteadyStateObjective
+export Optim, SteadyStateObjective, solve
 
+import DiffEqBase: solve  # use CommonSolve.jl?
 import NLsolve
 import Optim
-using DiffEqBase: ODEProblem, solve
+using DiffEqBase: ODEProblem
 using Setfield
 using Zygote: @adjoint, forward
 

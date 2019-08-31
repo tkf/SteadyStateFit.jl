@@ -1,11 +1,11 @@
 """
-    optimize(sso::SteadyStateObjective, [method, options, x0])
+    solve(sso::SteadyStateObjective, [method, options, x0])
 
 Optimize a [`SteadyStateObjective`](@ref) `sso` using Optim.  The rest
 of the positional and keyword arguments are passed to
 `Optim.optimize`.
 """
-function optimize(
+function solve(
     sso::SteadyStateObjective,
     method::Optim.AbstractOptimizer = Optim.BFGS(),
     options::Optim.Options = Optim.Options(),

@@ -30,7 +30,7 @@ sso = SteadyStateObjective(
     (@lens _),                     # parameterlens
 )
 
-result = SteadyStateFit.optimize(sso)
+result = solve(sso)
 
 @test exp(Optim.minimizer(result)[1]) ≈ 64/729  rtol=0.01
 
