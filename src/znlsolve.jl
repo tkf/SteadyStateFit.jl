@@ -10,7 +10,7 @@ znlsolve(args...; kwargs...) = NLsolve.nlsolve(args...; kwargs...)
 
 @adjoint znlsolve(f, j, x0; kwargs...) =
     let result = znlsolve(f, j, x0; kwargs...)
-        NLsolve.converged(result) || throw(NLsolveNotConvergedError(result))
+        NLsolve.converged(result) || throw(NLsolveNotConvergedError(f, j, result))
         result, function(vresult)
             # This backpropagator returns (- v' (df/dx)⁻¹ (df/dp))'
             v = vresult[].zero
@@ -22,6 +22,8 @@ znlsolve(args...; kwargs...) = NLsolve.nlsolve(args...; kwargs...)
     end
 
 struct NLsolveNotConvergedError <: Exception
+    f
+    j
     result
 end
 
