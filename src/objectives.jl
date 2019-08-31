@@ -63,6 +63,11 @@ setparameter(sso::SteadyStateObjective, x) =
 updatesteadystates!(sso::SteadyStateObjective, x) =
     sso.states .= steadystates(sso, x)
 
+setsteadystates!(f, sso::SteadyStateObjective) =
+    foreach(sso.states, sso.conditions) do u0, condition
+        u0 .= f(set(sso.p, sso.conditionsetter, condition), u0)
+    end
+
 steadystates(sso::SteadyStateObjective, x) = steadystates(setparameter(sso, x))
 
 steadystates(sso::SteadyStateObjective) =
