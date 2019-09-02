@@ -113,7 +113,8 @@ function (sso::SteadyStateObjective)(F, G, x)
         return sso(x)
     end
     f, back = forward(sso, x)
-    G .= first(back(1))
+    # Should I warn when the gradient is `nothing`?
+    G .= something.(first(back(1)), false)
     if F !== nothing
         return f
     end
