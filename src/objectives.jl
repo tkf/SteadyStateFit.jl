@@ -96,9 +96,11 @@ _steadystate(sso::SteadyStateObjective, u0, condition) =
 # f(x)
 (sso::SteadyStateObjective)(x) =
     let sso = setparameter(sso, x)
-        sum(zip(sso.states, sso.conditions)) do (u0, condition)
+        # Not using `sum(f, xs)` to avoid a bug:
+        # https://github.com/FluxML/Zygote.jl/pull/321
+        map(sso.states, sso.conditions) do u0, condition
             sso.loss(_steadystate(sso, u0, condition), condition)
-        end
+        end |> sum
     end
 
 # fg!(F, G, x)
