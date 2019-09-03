@@ -23,7 +23,7 @@ ode = ODEProblem(
 )
 
 sso = SteadyStateObjective(
-    ((x1, x2), c) -> x1 - c * x2,  # loss
+    (((x1, x2),), (c,)) -> x1 - c * x2,  # loss
     ode,
     [1],                           # conditions
     NullSetter(),                  # conditionsetter

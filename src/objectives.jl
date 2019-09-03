@@ -30,25 +30,27 @@ NLSolver(; kwargs...) = NLSolver(kwargs.data :: NamedTuple)
     SteadyStateObjective(
         loss,
         ode::ODEProblem,
-        conditions,
+        conditions::AbstractVector,
         conditionsetter::Lens,
         parameterlens::Lens,
         steadystatesolver = NLSolver(),
     )
 
-`SteadyStateObjective` defines an objective function `F`
+`SteadyStateObjective` defines an objective function that `x ↦ F(x)` that
+computes
 
-```math
-F(x) =
-\\frac{1}{N}
-\\sum_{c \\in \\mathtt{conditions}} \\mathtt{loss}(u(x, c), c)
+```julia
+loss(states :: AbstractVector{TU}, conditions :: AbstractVector{TC}) :: Real
 ```
 
-where `N = length(conditions)` and ``u(x, c)`` is the steady state
-solution of the `ode` given a trainable parameter ``x`` and a
-condition ``c``.  The trainable parameter ``x`` and the "external"
-condition ``c`` are set using `parameterlens` and `conditionsetter`
-lenses which act on `ode.p` respectively.
+where `conditions` is the argument passed to `SteadyStateObjective`
+and `states` is a vector of steady state `u(x, c :: TC) :: TU` of the
+`ode` computed given a trainable parameter `x` and each `c` in
+`conditions`.
+
+The trainable parameter `x` and the "external" condition `c` are set
+using `parameterlens` and `conditionsetter` lenses which act on
+`ode.p` respectively.
 
 `SteadyStateObjective` also provides Jacobian in the `fg!(F, G, x)`
 form required by `Optim.only_fg!`.
@@ -96,11 +98,10 @@ _steadystate(sso::SteadyStateObjective, u0, condition) =
 # f(x)
 (sso::SteadyStateObjective)(x) =
     let sso = setparameter(sso, x)
-        # Not using `sum(f, xs)` to avoid a bug:
-        # https://github.com/FluxML/Zygote.jl/pull/321
-        map(sso.states, sso.conditions) do u0, condition
-            sso.loss(_steadystate(sso, u0, condition), condition)
-        end |> sum
+        states = map(sso.states, sso.conditions) do u0, condition
+            _steadystate(sso, u0, condition)
+        end
+        sso.loss(states, sso.conditions)
     end
 
 # fg!(F, G, x)
