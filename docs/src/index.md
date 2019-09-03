@@ -5,5 +5,5 @@
 
 ```@docs
 SteadyStateFit.SteadyStateObjective
-SteadyStateFit.optimize
+SteadyStateFit.solve
 ```
