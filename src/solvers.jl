@@ -12,32 +12,21 @@ function solve(
     x0 = get(sso.p, sso.parameterlens);
     kwargs...,
 )
-    return Optim.optimize(
+    iter = Optim.optimizing(
         Optim.only_fg!(sso),
         x0,
         method,
-        setupoptions(sso, options);
+        options;
         kwargs...,
     )
+    return Optim.OptimizationResults(_solve!(iter, sso))
 end
 
-# A hacky solution: To use the steady state of the last iteration,
-# `updatesteadystates!` is called via `callback` option.
-
-function setupoptions(sso::SteadyStateObjective, options::Optim.Options)
-    @assert options.show_every == 1
-    options = @set options.extended_trace = true
-    options = @set options.callback = StateUpdater(sso, options.callback)
-    return options
-end
-
-struct StateUpdater{T, C}
-    sso::T
-    callback::C
-end
-
-function (su::StateUpdater)(os)
-    # os :: OptimizationState
-    updatesteadystates!(su.sso, os.metadata["x"])
-    su.callback === nothing ? false : su.callback(os)
+function _solve!(iter, sso)
+    local istate
+    for istate′ in iter
+        istate = istate′
+        updatesteadystates!(sso, Optim.minimizer(istate))
+    end
+    return istate
 end
