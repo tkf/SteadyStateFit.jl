@@ -1,3 +1,5 @@
 [deps]
+DiffEqBase = "2b5f629d-d688-5b77-993f-72d75c75574e"
+Setfield = "efcf1570-3423-57d1-acb7-fd33fddbac46"
 SteadyStateFit = "ba0d49fa-da6a-49e1-9b97-8e3acd38c522"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
