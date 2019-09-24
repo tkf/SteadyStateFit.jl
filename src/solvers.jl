@@ -44,10 +44,10 @@ function Base.show(io::IO, ::MIME"text/plain", fit::SteadyStateFitResult)
     println(io, """
     SteadyStateFitResult
      * Loss:
-        $(summary(sso.loss))
+        $(shortsummary(sso.loss; context=io))
 
      * Model:
-        $(summary(sso.p))
+        $(shortsummary(sso.p; context=io))
 
      * Parameters:
         $(prettylens(sso.parameterlens; context=io))

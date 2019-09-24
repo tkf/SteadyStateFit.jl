@@ -16,6 +16,7 @@ else
     prettylens(x; kwargs...) = sprint(print, x; kwargs...)
 end
 
+include("utils.jl")
 include("znlsolve.jl")
 include("objectives.jl")
 include("solvers.jl")
