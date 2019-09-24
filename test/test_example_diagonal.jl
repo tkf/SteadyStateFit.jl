@@ -33,5 +33,6 @@ sso = SteadyStateObjective(
 result = solve(sso)
 
 @test exp(Optim.minimizer(result)[1]) ≈ 64/729  rtol=0.01
+@test occursin("SteadyStateFitResult", sprint(show, "text/plain", result))
 
 end  # module

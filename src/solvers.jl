@@ -50,10 +50,10 @@ function Base.show(io::IO, ::MIME"text/plain", fit::SteadyStateFitResult)
         $(summary(sso.p))
 
      * Parameters:
-        $(sso.parameterlens)
+        $(prettylens(sso.parameterlens; context=io))
 
      * Conditions ($(length(sso.conditions))):
-        $(sso.conditionsetter)
+        $(prettylens(sso.conditionsetter; context=io))
     """)
     show(io, MIME("text/plain"), fit.result)
 end
