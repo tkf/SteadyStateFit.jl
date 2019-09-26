@@ -35,4 +35,7 @@ result = solve(sso)
 @test exp(Optim.minimizer(result)[1]) ≈ 64/729  rtol=0.01
 @test occursin("SteadyStateFitResult", sprint(show, "text/plain", result))
 
+result2 = solve(sso, Optim.BFGS(), Optim.Options(store_trace=true))
+@test exp(Optim.minimizer(result2)[1]) ≈ 64/729  rtol=0.01
+
 end  # module
