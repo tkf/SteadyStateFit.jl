@@ -58,12 +58,34 @@ function Base.show(io::IO, ::MIME"text/plain", fit::SteadyStateFitResult)
     show(io, MIME("text/plain"), fit.result)
 end
 
-Base.minimum(fit::SteadyStateFitResult) = minimum(fit.result)
-
 function Optim.minimizer(fit::SteadyStateFitResult)
     p = fit.objective.p
     parameterlens = fit.objective.parameterlens
     return set(p, parameterlens, Optim.minimizer(fit.result))
+end
+
+# Forward accessor methods to `Optim`.  See:
+# https://julianlsolvers.github.io/Optim.jl/stable/#user/minimization/#complete-list-of-functions
+for f in [
+    :(Base.minimum),
+    :(Base.summary),
+    # Generic optimization:
+    :(Optim.iterations),
+    :(Optim.iteration_limit_reached),
+    :(Optim.trace),
+    :(Optim.x_trace),
+    :(Optim.f_trace),
+    :(Optim.f_calls),
+    :(Optim.converged),
+    # Multivariate optimization:
+    :(Optim.g_norm_trace),
+    :(Optim.g_calls),
+    :(Optim.x_converged),
+    :(Optim.f_converged),
+    :(Optim.g_converged),
+    :(Optim.initial_state),
+]
+    @eval $f(fit::SteadyStateFitResult) = $f(fit.result)
 end
 
 # A hacky solution: To use the steady state of the last iteration,
