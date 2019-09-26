@@ -72,24 +72,17 @@ end
 function setupoptions(sso::SteadyStateObjective, options::Optim.Options)
     @assert options.show_every == 1
     options = @set options.extended_trace = true
-    options = @set options.callback =
-        StateUpdater(sso, options.callback, options.store_trace)
+    options = @set options.callback = StateUpdater(sso, options.callback)
     return options
 end
 
 struct StateUpdater{T, C}
     sso::T
     callback::C
-    store_trace::Bool
 end
 
 function (su::StateUpdater)(os)
-    if su.store_trace
-        # os :: Vector{<:OptimizationState}
-        updatesteadystates!(su.sso, os[end].metadata["x"])
-    else
-        # os :: OptimizationState
-        updatesteadystates!(su.sso, os.metadata["x"])
-    end
+    # os :: OptimizationState
+    updatesteadystates!(su.sso, os.metadata["x"])
     su.callback === nothing ? false : su.callback(os)
 end
