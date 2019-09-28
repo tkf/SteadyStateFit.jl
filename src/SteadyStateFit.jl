@@ -22,11 +22,14 @@ include("objectives.jl")
 include("solvers.jl")
 
 function __init__()
-    Zygote = Base.require(Base.PkgId(
-        Base.UUID("e88e6eb3-aa80-5325-afca-941959d7151f"),
-        "Zygote",
-    ))
-    @eval const forward = $Zygote.forward
+    # Load Zygote only at run-time:
+    if ccall(:jl_generating_output, Cint, ()) != 1
+        Zygote = Base.require(Base.PkgId(
+            Base.UUID("e88e6eb3-aa80-5325-afca-941959d7151f"),
+            "Zygote",
+        ))
+        @eval const forward = $Zygote.forward
+    end
 end
 
 end # module
