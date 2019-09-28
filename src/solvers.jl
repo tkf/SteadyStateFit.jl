@@ -40,21 +40,9 @@ struct SteadyStateFitResult
 end
 
 function Base.show(io::IO, ::MIME"text/plain", fit::SteadyStateFitResult)
-    sso = fit.objective
-    println(io, """
-    SteadyStateFitResult
-     * Loss:
-        $(shortsummary(sso.loss; context=io))
-
-     * Model:
-        $(shortsummary(sso.p; context=io))
-
-     * Parameters:
-        $(prettylens(sso.parameterlens; context=io))
-
-     * Conditions ($(length(sso.conditions))):
-        $(prettylens(sso.conditionsetter; context=io))
-    """)
+    println(io, "SteadyStateFitResult")
+    _showbody(io, fit.objective)
+    println(io)
     show(io, MIME("text/plain"), fit.result)
 end
 

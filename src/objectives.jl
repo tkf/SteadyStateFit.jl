@@ -126,3 +126,24 @@ function (sso::SteadyStateObjective)(F, G, x)
         return f
     end
 end
+
+function _showbody(io, sso::SteadyStateObjective)
+    print(io, """
+     * Loss:
+        $(shortsummary(sso.loss; context=io))
+
+     * Model:
+        $(shortsummary(sso.p; context=io))
+
+     * Parameters:
+        $(prettylens(sso.parameterlens; context=io))
+
+     * Conditions ($(length(sso.conditions))):
+        $(prettylens(sso.conditionsetter; context=io))
+    """)
+end
+
+function Base.show(io::IO, ::MIME"text/plain", sso::SteadyStateObjective)
+    println(io, "SteadyStateObjective")
+    _showbody(io, sso)
+end
