@@ -9,7 +9,7 @@ struct SteadyStateObjective{
     TPL <: Lens,
     TSSS,
 }
-    loss::TL   # loss(u, condition)
+    loss::TL   # loss(u, condition, sso)
     f::TF      # f(u, p, t)
     j::TJ      # j(u, p, t)
     p::TP
@@ -40,13 +40,20 @@ NLSolver(; kwargs...) = NLSolver(kwargs.data :: NamedTuple)
 computes
 
 ```julia
-loss(states :: AbstractVector{TU}, conditions :: AbstractVector{TC}) :: Real
+loss(states :: AbstractVector{TU}, conditions :: AbstractVector{TC}, sso) :: Real
 ```
 
-where `conditions` is the argument passed to `SteadyStateObjective`
-and `states` is a vector of steady state `u(x, c :: TC) :: TU` of the
-`ode` computed given a trainable parameter `x` and each `c` in
-`conditions`.
+where
+
+* `states` is a vector of steady state `u(x, c :: TC) :: TU` of the
+  `ode` computed given a trainable parameter `x` and each `c` in
+  `conditions`,
+
+* `conditions` is the argument passed to `SteadyStateObjective`, and
+
+* `sso` is a `SteadyStateObjective` such that `sso.p` contains the
+  parameter `x` for which the objective is evaluated; i.e. `sso.p` is
+  `set(ode.p, parameterlens, x)`.
 
 The trainable parameter `x` and the "external" condition `c` are set
 using `parameterlens` and `conditionsetter` lenses which act on
@@ -107,7 +114,7 @@ _steadystate(sso::SteadyStateObjective, u0, condition) =
         states = map(sso.states, sso.conditions) do u0, condition
             _steadystate(sso, u0, condition)
         end
-        sso.loss(states, sso.conditions)
+        sso.loss(states, sso.conditions, sso)
     end
 
 # fg!(F, G, x)
