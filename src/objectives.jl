@@ -81,6 +81,12 @@ setsteadystates!(f, sso::SteadyStateObjective) =
         u0 .= f(set(sso.p, sso.conditionsetter, condition), u0)
     end
 
+"""
+    steadystates(sso::SteadyStateObjective, [x])
+
+Compute steady states.  Use the (initial) parameter set for `sso.p` unless
+the parameter value `x` is given.
+"""
 steadystates(sso::SteadyStateObjective, x) = steadystates(setparameter(sso, x))
 
 steadystates(sso::SteadyStateObjective) =
