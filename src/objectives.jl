@@ -90,7 +90,7 @@ the parameter value `x` is given.
 steadystates(sso::SteadyStateObjective, x) = steadystates(setparameter(sso, x))
 
 steadystates(sso::SteadyStateObjective) =
-    map((condition, u0) -> _steadystate(sso, condition, u0),
+    map((u0, condition) -> _steadystate(sso, u0, condition),
         sso.states,
         sso.conditions)
 
