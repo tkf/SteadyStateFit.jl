@@ -88,6 +88,14 @@ for f in [
     @eval $f(fit::SteadyStateFitResult) = $f(fit.result)
 end
 
+"""
+    steadystates(fit::SteadyStateFitResult)
+
+Compute steady states with the minimizer.
+"""
+steadystates(fit::SteadyStateFitResult) =
+    steadystates(fit.objective, Optim.minimizer(fit.result))
+
 # A hacky solution: To use the steady state of the last iteration,
 # `updatesteadystates!` is called via `callback` option.
 
