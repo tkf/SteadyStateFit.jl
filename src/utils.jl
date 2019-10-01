@@ -12,3 +12,24 @@ function shortsummary(x; context=devnull)
         by = length,
     ))
 end
+
+macro nograd(funs...)
+    exprs = map(funs) do f
+        f = esc(f)
+        args = esc(gensym("args"))
+        return macroexpand(
+            __module__,
+            :(@adjoint $f($args...) = $f($args...), _ -> nothing),
+        )
+        # Without `macroexpand`, I get `syntax:
+        # "SteadyStateFit.__context__" is not a valid function
+        # argument name`.
+    end
+    return Expr(:block, __source__, exprs...)
+end
+
+# https://github.com/FluxML/Zygote.jl/pull/351
+@nograd Base.gc_num Base.time_ns
+
+nograd(f) = f()
+@nograd nograd
