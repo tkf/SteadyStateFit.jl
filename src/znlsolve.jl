@@ -6,11 +6,12 @@ It is a Zygote-compatible version of `nlsolve(args...; kwargs...)`.
 See:
 https://github.com/JuliaNLSolvers/NLsolve.jl/issues/205#issuecomment-524764679
 """
-znlsolve(args...; kwargs...) = NLsolve.nlsolve(args...; kwargs...)
+znlsolve(args...; converged=nothing, kwargs...) =
+    NLsolve.nlsolve(args...; kwargs...)
 
-@adjoint znlsolve(f, j, x0; kwargs...) =
+@adjoint znlsolve(f, j, x0; converged=NLsolve.converged, kwargs...) =
     let result = znlsolve(f, j, x0; kwargs...)
-        NLsolve.converged(result) ||
+        converged(result) ||
             throw(NLsolveNotConvergedError(f, j, x0, kwargs, result))
         result, function(vresult)
             # This backpropagator returns (- v' (df/dx)⁻¹ (df/dp))'
