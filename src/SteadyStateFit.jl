@@ -7,6 +7,7 @@ import Kaleido
 import NLsolve
 import Optim
 using DiffEqBase: ODEProblem
+using LinearAlgebra: lu, pinv, det
 using Setfield
 using ZygoteRules: @adjoint
 
