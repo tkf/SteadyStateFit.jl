@@ -39,6 +39,18 @@ struct SteadyStateFitResult
     objective  # SteadyStateObjective
 end
 
+function Base.show(io::IO, fit::SteadyStateFitResult)
+    maybe_default_show(io, fit) && return
+    print(io, "SteadyStateFitResult: ")
+    if Optim.converged(fit)
+        printstyled(io, "success"; color=:green)
+    else
+        printstyled(io, "failure"; color=:red)
+    end
+    print(io, "; ")
+    _summarybody(io, fit.objective)
+end
+
 function Base.show(io::IO, ::MIME"text/plain", fit::SteadyStateFitResult)
     println(io, "SteadyStateFitResult")
     _showbody(io, fit.objective)

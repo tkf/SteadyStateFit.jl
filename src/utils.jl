@@ -1,3 +1,11 @@
+function maybe_default_show(io, x)
+    if !get(io, :limit, false)
+        invoke(show, Tuple{IO, Any}, io, x)
+        return true
+    end
+    return false
+end
+
 function shortsummary(x; context=devnull)
     context = IOContext(
         context,

@@ -145,6 +145,17 @@ function (sso::SteadyStateObjective)(F, G, x)
     end
 end
 
+function _summarybody(io, sso::SteadyStateObjective)
+    print(io, length(sso.conditions), " conditions ")
+    print(io, length(get(sso.p, sso.parameterlens)), " parameters")
+end
+
+function Base.show(io::IO, sso::SteadyStateObjective)
+    maybe_default_show(io, sso) && return
+    print(io, "SteadyStateObjective: ")
+    _summarybody(io, sso)
+end
+
 function _showbody(io, sso::SteadyStateObjective)
     print(io, """
      * Loss:
