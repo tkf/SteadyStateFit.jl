@@ -8,6 +8,7 @@ struct SteadyStateObjective{
     TCL <: Lens,
     TPL <: Lens,
     TSSS,
+    TE,
     TNLC,
 }
     loss::TL   # loss(u, condition, sso)
@@ -19,6 +20,7 @@ struct SteadyStateObjective{
     conditionsetter::TCL
     parameterlens::TPL
     steadystatesolver::TSSS
+    preeval::TE
     nlsolvecallback::TNLC
 end
 
@@ -72,6 +74,7 @@ SteadyStateObjective(
     conditionsetter,
     parameterlens,
     steadystatesolver = NLSolver();
+    preeval = donothing,
     nlsolvecallback = donothing,
 ) =
     SteadyStateObjective(
@@ -79,6 +82,7 @@ SteadyStateObjective(
         deepcopy(fill(ode.u0, size(conditions))),
         conditions, conditionsetter, parameterlens,
         steadystatesolver,
+        preeval,
         nlsolvecallback,
     )
 
@@ -122,6 +126,8 @@ _steadystate(sso::SteadyStateObjective, u0, condition) =
 # f(x)
 (sso::SteadyStateObjective)(x) =
     let sso = setparameter(sso, x)
+        y = sso.preeval(sso)
+        y === nothing || return y
         states = map(sso.states, sso.conditions) do u0, condition
             _steadystate(sso, u0, condition)
         end
