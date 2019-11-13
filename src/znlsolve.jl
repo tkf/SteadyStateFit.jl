@@ -25,7 +25,7 @@ znlsolve(args...; converged=nothing, adlinsolve=nothing, kwargs...) =
             v = vresult[].zero
             x = result.zero
             J = j(x)
-            _, back = forward(f -> f(x), f)
+            _, back = pullback(f -> f(x), f)
             \ = adlinsolve
             return (back(-(J' \ v))[1], nothing, nothing)
         end

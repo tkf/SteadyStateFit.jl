@@ -29,7 +29,7 @@ function __init__()
             Base.UUID("e88e6eb3-aa80-5325-afca-941959d7151f"),
             "Zygote",
         ))
-        @eval const forward = $Zygote.forward
+        @eval const pullback = $Zygote.pullback
     end
 end
 

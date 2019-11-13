@@ -143,7 +143,7 @@ function (sso::SteadyStateObjective)(F, G, x)
         @assert F !== nothing  # can it happen?
         return sso(x)
     end
-    f, back = forward(sso, x)
+    f, back = pullback(sso, x)
     # Should I warn when the gradient is `nothing`?
     G .= something.(first(back(1)), false)
     if F !== nothing

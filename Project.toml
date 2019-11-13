@@ -5,7 +5,6 @@ version = "0.1.0"
 
 [deps]
 DiffEqBase = "2b5f629d-d688-5b77-993f-72d75c75574e"
-IRTools = "7869d1d1-7146-5819-86e3-90919afe41df"
 Kaleido = "caafb194-7e8d-11e9-2724-d5981dd0806d"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 NLsolve = "2774e3e8-f4cf-5e23-947b-6d7e65073b56"
@@ -15,9 +14,7 @@ Zygote = "e88e6eb3-aa80-5325-afca-941959d7151f"
 ZygoteRules = "700de1a5-db45-46bc-99cf-38207098b444"
 
 [compat]
-IRTools = "0.2"
-Zygote = "0.3"
-ZygoteRules = "0.1"
+Zygote = "0.4"
 julia = "1.1"
 
 [extras]
