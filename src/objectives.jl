@@ -8,6 +8,7 @@ struct SteadyStateObjective{
     TCL <: Lens,
     TPL <: Lens,
     TSSS,
+    TPP,
     TE,
     TNLC,
 }
@@ -20,6 +21,7 @@ struct SteadyStateObjective{
     conditionsetter::TCL
     parameterlens::TPL
     steadystatesolver::TSSS
+    processparameter::TPP
     preeval::TE
     nlsolvecallback::TNLC
 end
@@ -74,6 +76,7 @@ SteadyStateObjective(
     conditionsetter,
     parameterlens,
     steadystatesolver = NLSolver();
+    processparameter = identity,
     preeval = donothing,
     nlsolvecallback = donothing,
 ) =
@@ -82,6 +85,7 @@ SteadyStateObjective(
         deepcopy(fill(ode.u0, size(conditions))),
         conditions, conditionsetter, parameterlens,
         steadystatesolver,
+        processparameter,
         preeval,
         nlsolvecallback,
     )
@@ -113,7 +117,7 @@ steadystates(sso::SteadyStateObjective) =
         sso.conditions)
 
 _steadystate(sso::SteadyStateObjective, u0, condition) =
-    let p = set(sso.p, sso.conditionsetter, condition)
+    let p = sso.processparameter(set(sso.p, sso.conditionsetter, condition))
         # TODO: dispatch on `steadystatesolver` type at `znlsolve`
         options = sso.steadystatesolver.options
         (result, elapsed, bytes, gctime, memallocs) =
